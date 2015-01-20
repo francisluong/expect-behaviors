@@ -1,6 +1,13 @@
 require 'pry'
+require 'expect/match'
 
 module Expect
+
+  ##
+  # Add Expect behaviors to Accessor classes that have an input buffer: e.g. telnet/ssh
+  # :Required methods to be created by the class mixing Expect::Behaviors :
+  #   #expect_buffer - provide the current buffer contents and empty it
+  #   #process - should do one iteration of handle input and append buffer
   module Behavior
 
     TIMEOUT_SEC_DEFAULT = 10
@@ -9,6 +16,7 @@ module Expect
     @match = nil
     @timeout_sec = TIMEOUT_SEC_DEFAULT
     @timeout_block = nil
+    @expect_buffer = nil
 
     def timeout_action_default
       raise(TimeoutError)
@@ -35,7 +43,8 @@ module Expect
           @match = nil
           while match.nil? do
             send(exp_process)
-            buffer = send(exp_expect_buffer_method)
+            @expect_buffer ||= ""
+            @expect_buffer << send(exp_expect_buffer_method)
             @match_registry.each_pair do |expression, block|
               match_object = check_match(expression, buffer)
             end
@@ -51,7 +60,7 @@ module Expect
       match_object = nil
       if expression =~ buffer
         @match = true
-        match_object = ::Expect::Match.new(expression, buffer)
+        match_object = Expect::Match.new(expression, buffer)
         block.call(match_object)
       end
       match_object
@@ -64,6 +73,10 @@ module Expect
 
     def when_timeout(timeout_sec, &block)
       @timeout_sec = timeout_sec
+    end
+
+    def clear_expect_buffer
+      @expect_buffer = nil
     end
 
     # Error Classes
