@@ -12,11 +12,11 @@ module Expect
 
     TIMEOUT_SEC_DEFAULT = 10
     #initialize
-    @match_registry = {}
-    @match = nil
-    @timeout_sec = TIMEOUT_SEC_DEFAULT
-    @timeout_block = nil
-    @expect_buffer = nil
+    @match_registry     = {}
+    @match              = nil
+    @timeout_sec        = TIMEOUT_SEC_DEFAULT
+    @timeout_block      = nil
+    @expect_buffer      = nil
 
     def timeout_action_default
       raise(TimeoutError)
@@ -54,17 +54,19 @@ module Expect
         @timeout_block.nil? ? timeout_action_default : @timeout_block.call
       end
     end
+
     private :execute_expect_loop
 
     def check_match(expression, buffer)
       match_object = nil
       if expression =~ buffer
-        @match = true
+        @match       = true
         match_object = Expect::Match.new(expression, buffer)
         block.call(match_object)
       end
       match_object
     end
+
     private :check_match
 
     def when_matching(expression, &block)

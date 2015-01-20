@@ -22,8 +22,8 @@ class TestExpectMatch < Test::Unit::TestCase
       match = Expect::Match.new(expr1, buffer1)
       assert_equal(" is cool\nbob is good", match.substring_remainder)
     end
-
   end
+
   def expr1
     /bob/
   end
