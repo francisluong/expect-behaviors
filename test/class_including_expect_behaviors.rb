@@ -1,11 +1,18 @@
+require 'expect/behaviors'
 class ClassIncludingExpectBehaviors
+  include Expect::Behavior
+
   attr_accessor :expect_buffer
 
   def initialize
-    @expect_buffer = nil
+    @exp_buffer = nil
   end
 
-  def process
+  def exp_process
+
+  end
+
+  def exp_buffer
 
   end
 end
