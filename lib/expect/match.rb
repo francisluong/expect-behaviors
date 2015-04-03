@@ -12,28 +12,24 @@ module Expect
       @matches.nil? ? nil : @matches[0]
     end
 
-    def substring_up_to_match
-      if @matches.nil?
-        nil
-      else
-        new_expr = substring_expression
-        @buffer.match(new_expr)[0]
-      end
+    def expr_substring_to_match
+      Regexp.new(".*?#{@expression.source}", @expression.options | Regexp::MULTILINE)
     end
 
+    def substring_up_to_match
+      @matches.nil? ? nil : @buffer.match(expr_substring_to_match)[0]
+    end
     alias_method :to_s, :substring_up_to_match
 
     def substring_remainder
-      start_index = substring_up_to_match.length
-      @buffer[start_index..-1]
+      if @matches.nil?
+        @buffer
+      else
+        start_index = substring_up_to_match.length
+        @buffer[start_index..-1]
+      end
     end
-
-    ###
-    private
-
-    def substring_expression
-      Regexp.new(".*?#{@expression.source}", @expression.options | Regexp::MULTILINE)
-    end
+    alias_method :remainder, :substring_remainder
 
   end
 end
