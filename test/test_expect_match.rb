@@ -4,6 +4,12 @@ require 'expect/match'
 class TestExpectMatch < Test::Unit::TestCase
 
   context "on match" do
+
+    should "return false for #nil?" do
+      match = Expect::Match.new(expr1, buffer1)
+      assert_false(match.nil?)
+    end
+
     should "return full buffer by calling #buffer method" do
       match = Expect::Match.new(expr1, buffer1)
       assert(buffer1, match.buffer)
@@ -27,6 +33,11 @@ class TestExpectMatch < Test::Unit::TestCase
   end
 
   context "on non match" do
+    should "return true for #nil?" do
+      match = Expect::Match.new(expr_no_match, buffer1)
+      assert(match.nil?)
+    end
+
     should "return nil for #to_s" do
       match = Expect::Match.new(expr_no_match, buffer1)
       assert_equal(nil, match.to_s)

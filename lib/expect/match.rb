@@ -16,6 +16,10 @@ module Expect
       Regexp.new(".*?#{@expression.source}", @expression.options | Regexp::MULTILINE)
     end
 
+    def nil?
+      @matches.nil?
+    end
+
     def substring_up_to_match
       @matches.nil? ? nil : @buffer.match(expr_substring_to_match)[0]
     end

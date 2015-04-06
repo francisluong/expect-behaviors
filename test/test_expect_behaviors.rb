@@ -2,27 +2,13 @@ require 'helper'
 require 'class_including_expect_behaviors'
 
 class TestExpectBehaviors < Test::Unit::TestCase
-  context "includer" do
+
+  context "match registry" do
     setup do
       @includer = ClassIncludingExpectBehaviors.new
     end
 
-    should "have a method #exp_buffer which returns the current contents of the input buffer" do
-      assert(@includer.respond_to?(:exp_buffer))
-    end
-
-    should "have a method #process which processes session input for some amount of time and updates the input
-buffer" do
-      assert(@includer.respond_to?(:exp_process))
-    end
-  end
-
-  context "expect" do
-    setup do
-      @includer = ClassIncludingExpectBehaviors.new
-    end
-
-    should "populate the match registry" do
+    should "be populated by when_matching statements" do
       @includer.stubs(:execute_expect_loop)
       return_value = "Matched BOB"
       @includer.expect do
@@ -41,6 +27,24 @@ buffer" do
       assert_equal(return_value, @includer.instance_variable_get(:@exp_match_registry).values.first.call)
       assert_equal("TIMEOUT", @includer.instance_variable_get(:@exp_timeout_block).call)
     end
+  end
 
+  context "timeout" do
+    setup do
+      @includer = ClassIncludingExpectBehaviors.new(wait: 2)
+    end
+
+    should "raise TimeoutError when timeout is reached before match is found" do
+      @includer.exp_timeout_sec = 1
+      assert_raises(Expect::TimeoutError) do
+        @includer.expect do
+          when_matching(/bob/) do
+            return_value
+          end
+        end
+      end
+    end
+
+    
   end
 end

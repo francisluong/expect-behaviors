@@ -1,5 +1,6 @@
 require 'pry'
 require 'expect/match'
+require 'expect/timeout_error'
 
 module Expect
 
@@ -12,11 +13,11 @@ module Expect
 
     EXP_TIMEOUT_SEC_DEFAULT = 10
     #initialize
-    @exp_match_registry     = {}
-    @exp_match              = nil
-    @exp_timeout_sec        = EXP_TIMEOUT_SEC_DEFAULT
-    @exp_timeout_block      = nil
-    @exp_buffer      = nil
+    @exp_match_registry = {}
+    @exp_match = nil
+    @exp_timeout_sec = EXP_TIMEOUT_SEC_DEFAULT
+    @exp_timeout_block = nil
+    @exp_buffer = ''
 
     def expect(&block)
       #pre-action
@@ -29,41 +30,47 @@ module Expect
       #post-action
     end
 
+    def exp_timeout_sec=(timeout_sec)
+      @exp_timeout_sec = timeout_sec
+    end
+
 
     ##################
     private
     ##################
 
-    def check_match(expression, buffer)
+    def exp_registered_matches
       match_object = nil
-      if expression =~ buffer
-        @exp_match       = true
-        match_object = Expect::Match.new(expression, buffer)
-        block.call(match_object)
+      @exp_buffer ||= ''
+      @exp_match_registry.each_pair do |expr, block|
+        expr = expr.to_s unless expr.is_a?(Regexp)
+        if @exp_buffer.match(expr)
+          @exp_match = true
+          match_object = Expect::Match.new(expression, @exp_buffer)
+          block.call
+        end
       end
-      match_object
+      @exp_match = match_object
+      @exp_match
     end
 
     def clear_expect_buffer
-      @exp_buffer = nil
+      @exp_buffer = ''
     end
 
     def execute_expect_loop
       begin
         Timeout::timeout(@exp_timeout_sec) do
           @exp_match = nil
-          while match.nil? do
-            process
-            @exp_buffer ||= ""
-            @exp_buffer << send(exp_expect_buffer_method)
-            @exp_match_registry.each_pair do |expression, block|
-              match_object = check_match(expression, buffer)
-            end
+          while exp_registered_matches.nil? do
+            raise unless respond_to?(:exp_buffer)
+            @exp_buffer << exp_process
           end
         end
       rescue Timeout::Error => e
         @exp_timeout_block.nil? ? timeout_action_default : @exp_timeout_block.call
       end
+      @exp_match
     end
 
     def initialize_expect
@@ -71,6 +78,7 @@ module Expect
       @exp_match              = nil
       @exp_timeout_sec        = EXP_TIMEOUT_SEC_DEFAULT
       @exp_timeout_block      = nil
+      @exp_buffer           ||= ''
     end
 
     def timeout_action_default
@@ -86,8 +94,6 @@ module Expect
       @exp_timeout_block = block
     end
 
-    # Error Classes
-    class TimeoutError < StandardError
-    end
+
   end
 end
