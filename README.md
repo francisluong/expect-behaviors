@@ -1,5 +1,5 @@
 # expect-behaviors
-Ruby Mixin to add Expect Behaviors
+Ruby Mixin to add Expect Behaviors to SSH/Serial/Telnet controllers
 
 # Contributing to expect-behaviors
 
