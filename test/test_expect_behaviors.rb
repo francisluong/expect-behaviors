@@ -45,6 +45,18 @@ class TestExpectBehaviors < Test::Unit::TestCase
       end
     end
 
-    
+    should "execute arbitrary block on timeout with override" do
+      result = @includer.expect do
+        when_matching(/bob/) do
+          return_value
+        end
+        when_timeout(1) do
+          "timeout"
+        end
+      end
+      assert_equal('timeout', result)
+    end
+
   end
+
 end
