@@ -19,4 +19,4 @@ require 'shoulda'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 # ...and the test folder
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-require 'expect/behaviors'
+require 'expect/behavior'

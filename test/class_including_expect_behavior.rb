@@ -1,5 +1,6 @@
-require 'expect/behaviors'
-class ClassIncludingExpectBehaviors
+require 'expect/behavior'
+
+class ClassIncludingExpectBehavior
   include Expect::Behavior
 
   attr_reader :exp_buffer

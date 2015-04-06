@@ -1,10 +1,10 @@
 require 'helper'
-require 'class_including_expect_behaviors'
+require 'class_including_expect_behavior'
 
 class TestIncluderClass < Test::Unit::TestCase
   context "includer class" do
     setup do
-      @includer = ClassIncludingExpectBehaviors.new
+      @includer = ClassIncludingExpectBehavior.new
     end
 
     should "have a method #exp_buffer which returns the current contents of the input buffer" do
@@ -17,7 +17,7 @@ buffer" do
     end
 
     should "set @wait_sec when initialized with kwarg: 'wait'" do
-      assert_equal(10, ClassIncludingExpectBehaviors.new(wait: 10).instance_variable_get(:@wait_sec))
+      assert_equal(10, ClassIncludingExpectBehavior.new(wait: 10).instance_variable_get(:@wait_sec))
     end
 
     should "return empty string for exp_process by default" do
@@ -25,7 +25,7 @@ buffer" do
     end
 
     should "return buffer values in sequence when init with kwarg: 'values'" do
-      includer = ClassIncludingExpectBehaviors.new(values: ["one", "TWO"])
+      includer = ClassIncludingExpectBehavior.new(values: ["one", "TWO"])
       assert_equal("one", includer.exp_process)
       assert_equal("TWO", includer.exp_process)
     end

@@ -1,11 +1,12 @@
 require 'helper'
-require 'class_including_expect_behaviors'
+require 'expect/behavior'
+require 'class_including_expect_behavior'
 
 class TestExpectBehaviors < Test::Unit::TestCase
 
   context "match registry" do
     setup do
-      @includer = ClassIncludingExpectBehaviors.new
+      @includer = ClassIncludingExpectBehavior.new
     end
 
     should "be populated by when_matching statements" do
@@ -31,7 +32,7 @@ class TestExpectBehaviors < Test::Unit::TestCase
 
   context "timeout" do
     setup do
-      @includer = ClassIncludingExpectBehaviors.new(wait: 2)
+      @includer = ClassIncludingExpectBehavior.new(wait: 2)
     end
 
     should "raise TimeoutError when timeout is reached before match is found" do
@@ -56,6 +57,9 @@ class TestExpectBehaviors < Test::Unit::TestCase
       end
       assert_equal('timeout', result)
     end
+  end
+
+  context "expect" do
 
   end
 
