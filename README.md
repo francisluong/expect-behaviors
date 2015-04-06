@@ -3,6 +3,7 @@ Ruby Mixin to add Expect Behaviors to SSH/Serial/Telnet controllers
 
 [![Build Status](https://travis-ci.org/francisluong/expect-behaviors.svg?branch=master)](https://travis-ci.org/francisluong/expect-behaviors)
 [![Code Climate](https://codeclimate.com/github/francisluong/expect-behaviors/badges/gpa.svg)](https://codeclimate.com/github/francisluong/expect-behaviors)
+[![Test Coverage](https://codeclimate.com/github/francisluong/expect-behaviors/badges/coverage.svg)](https://codeclimate.com/github/francisluong/expect-behaviors)
 
 # Contributing to expect-behaviors
 
