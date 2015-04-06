@@ -7,3 +7,6 @@ install:
  - bundle install
 script: 
 - rake test
+addons:
+  code_climate:
+    repo_token: da682865771c5c7d9c6f59c442013c80989a6f19a25a960cecf46aca0f8d0f0d
