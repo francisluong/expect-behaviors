@@ -27,7 +27,7 @@ buffer" do
     should "return buffer values in sequence when init with kwarg: 'values'" do
       includer = ClassIncludingExpectBehavior.new(values: ["one", "TWO"])
       assert_equal("one", includer.exp_process)
-      assert_equal("TWO", includer.exp_process)
+      assert_equal("oneTWO", includer.exp_process)
     end
 
   end

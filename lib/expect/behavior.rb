@@ -48,7 +48,7 @@ module Expect
         @exp_match_registry.each_pair do |expr, block|
           expr = expr.to_s unless expr.is_a?(Regexp)
           if @exp_buffer.match(expr)
-            match_object = Expect::Match.new(expression, @exp_buffer)
+            match_object = Expect::Match.new(expr, @exp_buffer)
             block.call
           end
         end
@@ -87,6 +87,7 @@ module Expect
     def when_matching(expression, &block)
       @exp_match_registry[expression] = block
     end
+    alias_method :when_match, :when_matching
 
     def when_timeout(timeout_sec = nil, &block)
       @exp_timeout_sec = timeout_sec unless timeout_sec.nil?

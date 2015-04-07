@@ -60,6 +60,40 @@ class TestExpectBehaviors < Test::Unit::TestCase
   end
 
   context "expect" do
+    setup do
+      @values = []
+      @values << "the sun is a mass"
+      @values << "\nof incandescent gas"
+      @values << "\nswitch-prompt#"
+      @values << "\nblip blip"
+      @values << "\nblah blah"
+      @values << "\nswitch-prompt2#"
+      @includer = ClassIncludingExpectBehavior.new(values: @values)
+    end
+
+    should "match up to first switch-prompt" do
+      result = @includer.expect do
+        when_matching(/switch-prompt#/) do
+          @exp_match
+        end
+      end
+      expected = "the sun is a massthe sun is a mass\nof incandescent gasthe sun is a massthe sun is a mass\nof incandescent gas\nswitch-prompt#"
+      assert_equal(expected, result.to_s)
+    end
+
+    should "timeout for switch-prompt2#" do
+      @includer.wait_sec = 1
+      @includer.exp_timeout_sec = 4
+      result = @includer.expect do
+        when_matching(/switch-prompt2#/) do
+          @exp_match
+        end
+        when_timeout(3) do
+          "timed out"
+        end
+      end
+      assert_equal('timed out', result.to_s)
+    end
 
   end
 
