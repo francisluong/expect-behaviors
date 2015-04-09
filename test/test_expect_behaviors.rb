@@ -1,6 +1,8 @@
 require 'helper'
 require 'expect/behavior'
 require 'class_including_expect_behavior'
+gem 'mocha'
+require 'mocha/test_unit'
 
 class TestExpectBehaviors < Test::Unit::TestCase
 
@@ -27,6 +29,43 @@ class TestExpectBehaviors < Test::Unit::TestCase
       assert_equal(2, @includer.instance_variable_get(:@exp_match_registry).length)
       assert_equal(return_value, @includer.instance_variable_get(:@exp_match_registry).values.first.call)
       assert_equal("TIMEOUT", @includer.instance_variable_get(:@exp_timeout_block).call)
+    end
+  end
+
+  context "initialize_expect" do
+    setup do
+      @includer = ClassIncludingExpectBehavior.new(values: ["bobert"])
+    end
+
+    should "be run when calling expect" do
+      @includer.expects(:initialize_expect)
+      @includer.expects(:execute_expect_loop)
+      @includer.expect do
+        when_matching(/bob/) do
+          return_value
+        end
+      end
+    end
+
+    should "key instance variables undefined before first expect" do
+      # undefined/nil before first expect
+      assert_equal(nil, @includer.instance_variable_get(:@exp_match_registry))
+      assert_equal(nil, @includer.instance_variable_get(:@exp_timeout_sec))
+      assert_equal(nil, @includer.instance_variable_get(:@exp_match))
+      assert_equal(nil, @includer.instance_variable_get(:@exp_timeout_block))
+      assert_equal(nil, @includer.instance_variable_get(:@__exp_buffer))
+    end
+
+    should "setup instance variables prior to expect" do
+      @includer.expects(:execute_expect_loop) #stub out expect loop
+      @includer.expect do
+        "bob"
+      end
+      assert_equal({}, @includer.instance_variable_get(:@exp_match_registry))
+      assert_equal(10, @includer.instance_variable_get(:@exp_timeout_sec))
+      assert_equal(nil, @includer.instance_variable_get(:@exp_match))
+      assert_equal(nil, @includer.instance_variable_get(:@exp_timeout_block))
+      assert_equal('', @includer.instance_variable_get(:@__exp_buffer))
     end
   end
 
@@ -77,7 +116,7 @@ class TestExpectBehaviors < Test::Unit::TestCase
           @exp_match
         end
       end
-      expected = "the sun is a massthe sun is a mass\nof incandescent gasthe sun is a massthe sun is a mass\nof incandescent gas\nswitch-prompt#"
+      expected = "the sun is a mass\nof incandescent gas\nswitch-prompt#"
       assert_equal(expected, result.to_s)
     end
 

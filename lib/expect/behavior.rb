@@ -15,16 +15,9 @@ module Expect
     attr_accessor :exp_timeout_sec
 
     EXP_TIMEOUT_SEC_DEFAULT = 10
-    #initialize
-    @exp_match_registry = {}
-    @exp_match = nil
-    @exp_timeout_sec = EXP_TIMEOUT_SEC_DEFAULT
-    @exp_timeout_block = nil
-    @exp_buffer = nil
-
     def expect(&block)
       #pre-action
-      initialize_expect if @exp_buffer.nil?
+      initialize_expect if @__exp_buffer.nil?
       @exp_match_registry = {}
       #register callbacks
       instance_eval(&block)
@@ -39,16 +32,16 @@ module Expect
     ##################
 
     def clear_expect_buffer
-      @exp_buffer = ''
+      @__exp_buffer = ''
     end
 
     def exp_registered_matches
       match_object = nil
-      unless @exp_buffer.nil?
+      unless @__exp_buffer.nil?
         @exp_match_registry.each_pair do |expr, block|
           expr = expr.to_s unless expr.is_a?(Regexp)
-          if @exp_buffer.match(expr)
-            match_object = Expect::Match.new(expr, @exp_buffer)
+          if @__exp_buffer.match(expr)
+            match_object = Expect::Match.new(expr, @__exp_buffer)
             block.call
           end
         end
@@ -63,7 +56,9 @@ module Expect
           @exp_match = nil
           while exp_registered_matches.nil? do
             raise unless respond_to?(:exp_buffer)
-            @exp_buffer << exp_process.to_s
+            raise unless respond_to?(:exp_process)
+            exp_process
+            @__exp_buffer << exp_buffer.to_s
           end
         end
         @exp_match
@@ -77,7 +72,7 @@ module Expect
       @exp_match = nil
       @exp_timeout_sec ||= EXP_TIMEOUT_SEC_DEFAULT
       @exp_timeout_block ||= nil
-      @exp_buffer ||= ''
+      @__exp_buffer ||= ''
     end
 
     def timeout_action_default
