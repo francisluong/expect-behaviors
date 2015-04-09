@@ -2,8 +2,9 @@ require 'expect/behavior'
 
 class ClassIncludingExpectBehavior
   include Expect::Behavior
-  #   #exp_buffer - provide the current buffer contents and empty it
+  # :Required methods to be created by the class mixing Expect::Behaviors :
   #   #exp_process - should do one iteration of handle input and append buffer
+  #   #exp_buffer - provide the current buffer contents and empty it
 
   attr_accessor :exp_buffer_values, :wait_sec
 
