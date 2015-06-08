@@ -95,3 +95,6 @@ DEPENDENCIES
   shoulda (~> 3.5.0)
   shoulda-context (~> 1.2.1)
   test-unit (~> 2.5.5)
+
+BUNDLED WITH
+   1.10.3

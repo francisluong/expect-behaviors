@@ -134,6 +134,41 @@ class TestExpectBehaviors < Test::Unit::TestCase
       assert_equal('timed out', result.to_s)
     end
 
+    should "not timeout for switch-prompt2# if expect_continue for blip" do
+      @includer.wait_sec = 1
+      result = @includer.expect do
+        when_matching(/switch-prompt2#/) do
+          @exp_match
+        end
+        when_matching(/blip/) do
+          exp_continue
+        end
+        when_timeout(4) do
+          "timed out"
+        end
+      end
+      expected = "the sun is a mass\nof incandescent gas\nswitch-prompt#\nblip blip\nblah blah\nswitch-prompt2#"
+      assert_equal(expected, result.to_s)
+    end
+
+    should "timeout for switch-prompt2# if expect_continue for incandescent" do
+      @includer.wait_sec = 1
+      result = @includer.expect do
+        when_matching(/switch-prompt2#/) do
+          @exp_match
+        end
+        when_matching(/incandescent/) do
+          exp_continue
+        end
+        when_timeout(3) do
+          "timed out"
+        end
+      end
+      expected = "timed out"
+      assert_equal(expected, result.to_s)
+    end
+
+
   end
 
 end
