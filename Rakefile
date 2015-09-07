@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "expect-behaviors"
   gem.homepage = "http://github.com/francisluong/expect-behaviors"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Ruby Mixin to add Expect Behaviors}
+  gem.description = %Q{Ruby Mixin to add Expect Behaviors to SSH/Serial/Telnet controllers}
   gem.email = "franco@definefunk.com"
   gem.authors = ["Francis Luong (Franco)"]
   # dependencies defined in Gemfile

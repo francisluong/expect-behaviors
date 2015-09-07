@@ -169,6 +169,29 @@ class TestExpectBehaviors < Test::Unit::TestCase
     end
 
 
+    should "handle subsequent expect statements" do
+      @includer.wait_sec = 1
+      @includer.expect do
+        when_matching(/incandescent/) do
+          @exp_match
+        end
+        when_timeout(3) do
+          "timed out"
+        end
+      end
+      result = @includer.expect do
+        when_matching(/switch-prompt#/) do
+          @exp_match
+        end
+        when_timeout(3) do
+          "timed out"
+        end
+      end
+      expected = "\nswitch-prompt#"
+      assert_equal(expected, result.to_s)
+    end
+
+
   end
 
 end
