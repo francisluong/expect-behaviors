@@ -5,6 +5,9 @@ require 'timeout'
 require 'expect/behavior'
 
 module Expect
+
+  ##
+  # An SSH Accessor with expect-like behaviors.  See also Expect::Behavior.
   class SSH
     include Expect::Behavior
     # :Required methods to be created by the class mixing Expect::Behaviors :
@@ -13,11 +16,14 @@ module Expect
 
     attr_reader :auth_methods
 
-    def initialize(
-        hostname, username,
-        port: 22, password: nil, ignore_known_hosts: false, key_file: nil, logout_command: "exit",
-        wait_interval_sec: 0.1
-    )
+    def initialize(hostname, username,
+                   # keyword args follow
+                   port: 22,
+                   password: nil, # password for login
+                   ignore_known_hosts: false, # ignore host key mismatches?
+                   key_file: nil, # path to private key file
+                   logout_command: "exit", # command to exit/logout SSH session on remote host
+                   wait_interval_sec: 0.1) # process interval
       @hostname = hostname
       @username = username
       @port = port
@@ -32,12 +38,16 @@ module Expect
       @receive_buffer = ''
     end
 
+    ##
+    # Transmit the contents of +command+ using the SSH @channel
     def send_data(command)
       @logger.debug("[Expect::SSH##{__method__}] [@hostname=#{@hostname}] [command=#{command}]")
       command += "\n" unless command.end_with?("\n")
       @channel.send_data(command)
     end
 
+    ##
+    # Initiate SSH connection
     def start
       $stdout.puts(
           "[Expect::SSH##{__method__}] [@hostname=#{@hostname}] [@username=#{@username}] [options=#{options}]"
@@ -47,7 +57,8 @@ module Expect
       @channel = request_channel_pty_shell
     end
 
-
+    ##
+    # Close SSH connection
     def stop
       @logger.debug("[Expect::SSH##{__method__}]: Closing Channel")
       @channel.send_data(@logout_command + "\n")
@@ -85,6 +96,9 @@ module Expect
     private
     ################
 
+    ##
+    # Sets up the channel, pty, and shell.
+    # Configures callbacks for handling incoming data.
     def request_channel_pty_shell
       channel = @ssh.open_channel do |channel|
         @logger.debug("[Expect::SSH##{__method__}]: Requesting PTY")
@@ -114,6 +128,8 @@ module Expect
       channel
     end
 
+    ##
+    # Construct the options hash to feed Net::SSH
     def options
       override_options = {
           :auth_methods => auth_methods,
