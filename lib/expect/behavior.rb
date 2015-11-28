@@ -37,6 +37,10 @@ module Behavior
       @__exp_buffer = ''
     end
 
+    def current_time
+      Time.now.to_f
+    end
+
     def exp_registered_matches
       match_object = nil
       unless @__exp_buffer.nil?
@@ -101,15 +105,15 @@ module Behavior
     end
 
     def init_timeout
-      @start_time = Time.now
+      @start_time = current_time
     end
 
     def timeout?
-      (Time.now - @start_time) > @exp_timeout_sec
+      (current_time - @start_time) > @exp_timeout_sec
     end
 
     def timeout_action_default
-      raise(TimeoutError, "Expect Timeout [start_time=#{@start_time}] [time=#{Time.now}]")
+      raise(TimeoutError, "Expect Timeout [start_time=#{@start_time}] [time=#{current_time}]")
     end
 
     def when_matching(expression, &block)

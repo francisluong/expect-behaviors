@@ -23,7 +23,7 @@ class ClassIncludingExpectBehavior
   ##
   #   #exp_buffer - provide the current buffer contents and empty it
   def exp_process
-    sleep(@wait_sec.to_i)
+    sleep(@wait_sec.to_f)
     # handle input
     @exp_buffer << @exp_buffer_values.shift.to_s
   end

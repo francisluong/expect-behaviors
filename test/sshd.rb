@@ -2,6 +2,10 @@ require 'erb'
 require 'fileutils'
 require 'socket'
 
+
+##
+# A Helper to start a second instance of SSHD on an unprivilege port which allows for a custom client key
+#  All keys for this server are created just in time.
 class SSHD
 
   TEST_ROOT = File.dirname(__FILE__)
@@ -30,6 +34,9 @@ class SSHD
   end
 
   def start
+    unless openssh_files_found?
+      raise(RuntimeError, "[SSHD] Error: Unable to locate sshd or ssh-keygen.")
+    end
     create_config
     generate_keys
     release_port
@@ -81,7 +88,7 @@ class SSHD
     end
   end
 
-  def openssh_good?
+  def openssh_files_found?
     not @ssh_keygen_filepath.empty? and not @sshd_filepath.empty?
   end
 
