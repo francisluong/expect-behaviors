@@ -8,7 +8,7 @@ module Expect
   # :Required methods to be created by the class mixing Expect::Behaviors :
   #   #exp_process - should do one iteration of handle input and append buffer
   #   #exp_buffer - provide the current buffer contents and empty it
-module Behavior
+  module Behavior
 
     attr_reader :exp_match
     attr_accessor :exp_timeout_sec
