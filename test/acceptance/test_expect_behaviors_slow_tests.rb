@@ -86,6 +86,24 @@ class TestExpectBehaviorsSlowTests < Test::Unit::TestCase
       end
       assert_equal('timeout', result)
     end
+
+    should "revert to previous timeout after an expect block" do
+      assert_equal(nil, @includer.instance_variable_get(:@exp_timeout_sec))
+      result = @includer.expect do
+        when_matching(/bob/) { @exp_match }
+        when_timeout(1) { "timeout" }
+      end
+      assert_equal('timeout', result)
+      assert_equal(10, @includer.instance_variable_get(:@exp_timeout_sec))
+      @includer.exp_timeout_sec = 2
+      assert_equal(2, @includer.instance_variable_get(:@exp_timeout_sec))
+      result = @includer.expect do
+        when_matching(/bob/) { @exp_match }
+        when_timeout(1) { "timeout" }
+      end
+      assert_equal('timeout', result)
+      assert_equal(2, @includer.instance_variable_get(:@exp_timeout_sec))
+    end
   end
 
 end

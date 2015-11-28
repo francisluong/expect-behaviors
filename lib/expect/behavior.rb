@@ -24,8 +24,10 @@ module Behavior
       #register callbacks
       instance_eval(&block)
       #action
-      execute_expect_loop
+      result = execute_expect_loop
       #post-action
+      @exp_timeout_sec_ephemeral = @exp_timeout_sec
+      result
     end
 
 
@@ -99,6 +101,7 @@ module Behavior
       @exp_match = nil
       @exp_sleep_interval_sec ||= EXP_SLEEP_INTERVAL_SEC_DEFAULT
       @exp_timeout_sec ||= EXP_TIMEOUT_SEC_DEFAULT
+      @exp_timeout_sec_ephemeral = @exp_timeout_sec
       @exp_timeout_block ||= nil
       @__exp_buffer ||= ''
       @__exp_full_buffer ||= ''
@@ -109,7 +112,7 @@ module Behavior
     end
 
     def timeout?
-      (current_time - @start_time) > @exp_timeout_sec
+      (current_time - @start_time) > @exp_timeout_sec_ephemeral
     end
 
     def timeout_action_default
@@ -122,7 +125,7 @@ module Behavior
     alias_method :when_match, :when_matching
 
     def when_timeout(timeout_sec = nil, &block)
-      @exp_timeout_sec = timeout_sec unless timeout_sec.nil?
+      @exp_timeout_sec_ephemeral = timeout_sec unless timeout_sec.nil?
       @exp_timeout_block = block
     end
 

@@ -51,4 +51,47 @@ class TestExpectSSH < Test::Unit::TestCase
 
   end
 
+  context :expect do
+
+    setup do
+      @ssh = Expect::SSH.new(@@hostname, @@username, port: @@port, key_file: @@sshd.client_key_path, ignore_known_hosts: true)
+      @ssh.start
+    end
+
+    teardown do
+      @ssh.stop
+    end
+
+    should "be able to send a few commands" do
+      result = @ssh.expect do
+        when_matching(/.*\$.*/) { @exp_match }
+      end
+      assert_match(/Last login:/, result.to_s)
+      @ssh.send_data("cat /etc/resolv.conf")
+      result = @ssh.expect do
+        when_matching(/.*nameserver.*/) { @exp_match }
+      end
+      assert_match(/nameserver [\d\.]+.*/, result.exact_match_string)
+      @ssh.send_data("date")
+      result = @ssh.expect do
+        when_matching(/.*20.*/) { @exp_match }
+      end
+      assert_match(/20/, result.exact_match_string)
+    end
+
+    should "timeout as expected" do
+      result = @ssh.expect do
+        when_matching(/.*\$.*/) { @exp_match }
+      end
+      assert_match(/Last login:/, result.to_s)
+      @ssh.send_data("sleep 2")
+      result = @ssh.expect do
+        when_matching(/.*\$.*/) { @exp_match }
+        when_timeout(1) { "timeout" }
+      end
+      assert_match(/timeout/, result)
+    end
+
+  end
+
 end

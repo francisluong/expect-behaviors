@@ -7,10 +7,17 @@ require 'expect/behavior'
 module Expect
   class SSH
     include Expect::Behavior
+    # :Required methods to be created by the class mixing Expect::Behaviors :
+    #   #exp_process - should do one iteration of handle input and append buffer
+    #   #exp_buffer - provide the current buffer contents and empty it
 
     attr_reader :auth_methods
 
-    def initialize(hostname, username, port: 22, password: nil, ignore_known_hosts: false, key_file: nil, logout_command: "exit")
+    def initialize(
+        hostname, username,
+        port: 22, password: nil, ignore_known_hosts: false, key_file: nil, logout_command: "exit",
+        wait_interval_sec: 0.1
+    )
       @hostname = hostname
       @username = username
       @port = port
@@ -18,10 +25,17 @@ module Expect
       @ignore_known_hosts = ignore_known_hosts
       @key_file = key_file
       @logout_command = logout_command
+      @wait_interval_sec = wait_interval_sec
       @auth_methods = ['none', 'publickey', 'password']
       @ssh = nil
       @logger = Logger.new($stdout)
       @receive_buffer = ''
+    end
+
+    def send_data(command)
+      @logger.debug("[Expect::SSH##{__method__}] [@hostname=#{@hostname}] [command=#{command}]")
+      command += "\n" unless command.end_with?("\n")
+      @channel.send_data(command)
     end
 
     def start
@@ -50,6 +64,21 @@ module Expect
         @logger.debug("[Expect::SSH##{__method__}]: FORCE Closing Session")
         @ssh.shutdown!
       end
+    end
+
+    ##
+    # exp_buffer - provide the current buffer contents and empty it
+    def exp_buffer
+      result = @receive_buffer
+      @receive_buffer = ''
+      result
+    end
+
+    ##
+    # exp_process - should do one iteration of handle input and append buffer
+    def exp_process
+      sleep(@wait_sec.to_f)
+      @ssh.process(0)
     end
 
     ################

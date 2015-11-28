@@ -14,6 +14,8 @@ class ClassIncludingExpectBehavior
     @wait_sec = wait
   end
 
+  ##
+  # exp_buffer - provide the current buffer contents and empty it
   def exp_buffer
     result = @exp_buffer
     @exp_buffer = ''
@@ -21,7 +23,7 @@ class ClassIncludingExpectBehavior
   end
 
   ##
-  #   #exp_buffer - provide the current buffer contents and empty it
+  # exp_process - should do one iteration of handle input and append buffer
   def exp_process
     sleep(@wait_sec.to_f)
     # handle input
