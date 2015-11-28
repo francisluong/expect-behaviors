@@ -49,6 +49,7 @@ GEM
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    net-ssh (2.9.2)
     nokogiri (1.6.5)
       mini_portile (~> 0.6.0)
     oauth2 (1.0.0)
@@ -90,6 +91,7 @@ DEPENDENCIES
   codeclimate-test-reporter
   jeweler (~> 2.0.0)
   mocha (~> 1.1.0)
+  net-ssh
   pry (~> 0.10.1)
   rdoc (~> 3.12)
   shoulda (~> 3.5.0)
