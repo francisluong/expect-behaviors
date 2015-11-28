@@ -121,9 +121,8 @@ module Expect
           :logger => @logger,
           :port => @port,
       }
-      if @ignore_known_hosts
-        override_options[:user_known_hosts_file] = '/dev/null'
-      end
+      override_options[:user_known_hosts_file] = '/dev/null' if @ignore_known_hosts
+      override_options[:password] = @password if @password
       Net::SSH.configuration_for(@host).merge(override_options)
     end
 
