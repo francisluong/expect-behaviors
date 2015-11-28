@@ -31,8 +31,6 @@ module Expect
       @ssh = Net::SSH.start(@hostname, @username, options)
       raise(RuntimeError, "[Expect::SSH##{__method__}]: SSH Start Failed") unless @ssh
       @channel = request_channel_pty_shell
-      @channel.send_data("date\n")
-      @ssh.process(0) {false}
     end
 
 
@@ -41,6 +39,9 @@ module Expect
       @channel.send_data(@logout_command + "\n")
       @channel.close
       begin
+        # A net-ssh quirk is that if you send a graceful close but you don't send an exit, it'll hang forever
+        # ...see also: http://stackoverflow.com/questions/25576454/ruby-net-ssh-script-not-closing
+        # I send an exit but just in case, also force the shutdown if it doesn't happen in 1 second.  #NotPatient
         Timeout::timeout(1) do
           @logger.debug("[Expect::SSH##{__method__}]: Closing Session")
           @ssh.close
