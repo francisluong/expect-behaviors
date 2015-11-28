@@ -8,7 +8,7 @@ module Expect
   # :Required methods to be created by the class mixing Expect::Behaviors :
   #   #exp_process - should do one iteration of handle input and append buffer
   #   #exp_buffer - provide the current buffer contents and empty it
-module Behavior
+  module Behavior
 
     attr_reader :exp_match
     attr_accessor :exp_timeout_sec
@@ -24,8 +24,10 @@ module Behavior
       #register callbacks
       instance_eval(&block)
       #action
-      execute_expect_loop
+      result = execute_expect_loop
       #post-action
+      @exp_timeout_sec_ephemeral = @exp_timeout_sec
+      result
     end
 
 
@@ -35,6 +37,10 @@ module Behavior
 
     def clear_expect_buffer
       @__exp_buffer = ''
+    end
+
+    def current_time
+      Time.now.to_f
     end
 
     def exp_registered_matches
@@ -95,21 +101,22 @@ module Behavior
       @exp_match = nil
       @exp_sleep_interval_sec ||= EXP_SLEEP_INTERVAL_SEC_DEFAULT
       @exp_timeout_sec ||= EXP_TIMEOUT_SEC_DEFAULT
+      @exp_timeout_sec_ephemeral = @exp_timeout_sec
       @exp_timeout_block ||= nil
       @__exp_buffer ||= ''
       @__exp_full_buffer ||= ''
     end
 
     def init_timeout
-      @start_time = Time.now
+      @start_time = current_time
     end
 
     def timeout?
-      (Time.now - @start_time) > @exp_timeout_sec
+      (current_time - @start_time) > @exp_timeout_sec_ephemeral
     end
 
     def timeout_action_default
-      raise(TimeoutError, "Expect Timeout [start_time=#{@start_time}] [time=#{Time.now}]")
+      raise(TimeoutError, "Expect Timeout [start_time=#{@start_time}] [time=#{current_time}]")
     end
 
     def when_matching(expression, &block)
@@ -118,7 +125,7 @@ module Behavior
     alias_method :when_match, :when_matching
 
     def when_timeout(timeout_sec = nil, &block)
-      @exp_timeout_sec = timeout_sec unless timeout_sec.nil?
+      @exp_timeout_sec_ephemeral = timeout_sec unless timeout_sec.nil?
       @exp_timeout_block = block
     end
 
