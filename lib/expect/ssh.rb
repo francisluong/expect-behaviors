@@ -101,31 +101,43 @@ module Expect
     # Configures callbacks for handling incoming data.
     def request_channel_pty_shell
       channel = @ssh.open_channel do |channel|
-        @logger.debug("[Expect::SSH##{__method__}]: Requesting PTY")
-        channel.request_pty do |_ch, success|
-          raise(RuntimeError, "[Expect::SSH##{__method__}]: Unable to get PTY") unless success
-        end
-        @logger.debug("[Expect::SSH##{__method__}]: Requesting Shell")
-        channel.send_channel_request("shell") do |_ch, success|
-          raise(RuntimeError, "[Expect::SSH##{__method__}]: Unable to get SHELL") unless success
-        end
-        @logger.debug("[Expect::SSH##{__method__}]: Registering Callbacks")
-        channel.on_data do |_ch, data|
-          @logger.debug("[Expect::SSH] [on_data=#{data}]")
-          @receive_buffer << data
-          false
-        end
-        channel.on_extended_data do |_ch, type, data|
-          @logger.debug("[Expect::SSH] [on_extended_data=#{data}]")
-          @receive_buffer << data if type == 1
-          false
-        end
-        channel.on_close do
-          @logger.debug("[Expect::SSH]: Close Channel")
-        end
+        request_pty(channel)
+        request_shell(channel)
+        register_callbacks(channel)
       end
       @logger.debug("[Expect::SSH##{__method__}] complete")
       channel
+    end
+
+    def request_pty(channel)
+      @logger.debug("[Expect::SSH##{__method__}]: Requesting PTY")
+      channel.request_pty do |_ch, success|
+        raise(RuntimeError, "[Expect::SSH##{__method__}]: Unable to get PTY") unless success
+      end
+    end
+
+    def request_shell(channel)
+      @logger.debug("[Expect::SSH##{__method__}]: Requesting Shell")
+      channel.send_channel_request("shell") do |_ch, success|
+        raise(RuntimeError, "[Expect::SSH##{__method__}]: Unable to get SHELL") unless success
+      end
+    end
+
+    def register_callbacks(channel)
+      @logger.debug("[Expect::SSH##{__method__}]: Registering Callbacks")
+      channel.on_data do |_ch, data|
+        @logger.debug("[Expect::SSH] [on_data=#{data}]")
+        @receive_buffer << data
+        false
+      end
+      channel.on_extended_data do |_ch, type, data|
+        @logger.debug("[Expect::SSH] [on_extended_data=#{data}]")
+        @receive_buffer << data if type == 1
+        false
+      end
+      channel.on_close do
+        @logger.debug("[Expect::SSH]: Close Channel")
+      end
     end
 
     ##
