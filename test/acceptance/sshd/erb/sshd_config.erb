@@ -11,20 +11,16 @@
 # default value.
 
 # See sshd_config(5) for details on setting the Port and Listen values on Mac OS X
-Port 2999
+Port <%= @port %>
 #AddressFamily any
-ListenAddress 127.0.0.1
+ListenAddress <%= @address %>
 #ListenAddress ::
 
 # The default requires explicit activation of protocol 1
 #Protocol 2
 
-# HostKey for protocol version 1
-#HostKey /etc/ssh/ssh_host_key
-# HostKeys for protocol version 2
-HostKey <%= repo_root %>/test/sshd/ssh_host_key_rsa
-HostKey <%= repo_root %>/test/sshd/ssh_host_key_dsa
-#HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey <%= SSHD_RSA_HOST_KEY_PATH %>
+HostKey <%= SSHD_DSA_HOST_KEY_PATH %>
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
@@ -48,7 +44,7 @@ PubkeyAuthentication yes
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
 # but this is overridden so installations will only check .ssh/authorized_keys
-AuthorizedKeysFile	<%= repo_root %>/test/sshd/authorized_keys
+AuthorizedKeysFile	<%= SSHD_AUTHORIZED_KEYS_PATH %>
 
 
 #AuthorizedPrincipalsFile none
@@ -66,4 +62,4 @@ AuthorizedKeysFile	<%= repo_root %>/test/sshd/authorized_keys
 # Don't read the user's ~/.rhosts and ~/.shosts files
 #IgnoreRhosts yes
 
-PidFile	<%= repo_root %>/test/sshd/sshd.pid
+PidFile	<%= PIDFILE_PATH %>

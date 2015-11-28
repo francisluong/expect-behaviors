@@ -49,5 +49,5 @@ pkg
 #*.rbc
 
 .idea
-test/sshd/sshd_config
-test/sshd/sshd.pid
+test/tmp
+test/tmp/sshd
