@@ -23,7 +23,8 @@ module Expect
                    ignore_known_hosts: false, # ignore host key mismatches?
                    key_file: nil, # path to private key file
                    logout_command: "exit", # command to exit/logout SSH session on remote host
-                   wait_interval_sec: 0.1) # process interval
+                   wait_interval_sec: 0.1, # process interval
+                   log_level: Logger::WARN)
       @hostname = hostname
       @username = username
       @port = port
@@ -35,6 +36,7 @@ module Expect
       @auth_methods = ['none', 'publickey', 'password']
       @ssh = nil
       @logger = Logger.new($stdout)
+      @logger.level = log_level if log_level
       @receive_buffer = ''
     end
 
@@ -145,10 +147,10 @@ module Expect
     def options
       override_options = {
           :auth_methods => auth_methods,
-          :keys => [@key_file],
           :logger => @logger,
           :port => @port,
       }
+      override_options[:keys] = [@key_file] if @key_file
       override_options[:user_known_hosts_file] = '/dev/null' if @ignore_known_hosts
       override_options[:password] = @password if @password
       Net::SSH.configuration_for(@host).merge(override_options)
