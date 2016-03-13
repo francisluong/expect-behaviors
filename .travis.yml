@@ -6,7 +6,7 @@ rvm:
 install:
  - bundle install
 script: 
-- openssl -v
+- openssh --version
 - uname -r
 - uname -s
 - uname -m
