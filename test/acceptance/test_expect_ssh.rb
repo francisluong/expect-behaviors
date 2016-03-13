@@ -6,21 +6,31 @@ require 'expect/ssh'
 class TestExpectSSH < Test::Unit::TestCase
 
   def self.startup
-    @@hostname = '127.0.0.1'
-    @@username = ENV['USER']
-    @@sshd = SSHD.new
-    @@sshd.start
-    @@port = @@sshd.port
+    @@omit = nil
+    if `uname -s`.chomp.eql?('Darwin')
+      @@hostname = '127.0.0.1'
+      @@username = ENV['USER']
+      @@sshd = SSHD.new
+      @@sshd.start
+      @@port = @@sshd.port
+    else
+      @@omit = true
+    end
   end
 
 
   def self.shutdown
-    @@sshd.teardown
+    @@sshd.teardown unless @@omit
+  end
+
+  def omit_unless_osx
+    omit('skipping SSHD testing unless OSX') if @@omit
   end
 
   context :init_and_start do
 
     setup do
+      omit_unless_osx
       @ssh = Expect::SSH.new(@@hostname, @@username, port: @@port, key_file: @@sshd.client_key_path, ignore_known_hosts: true)
     end
 
@@ -41,6 +51,7 @@ class TestExpectSSH < Test::Unit::TestCase
   context :startup do
 
     setup do
+      omit_unless_osx
       @ssh = Expect::SSH.new(@@hostname, @@username, port: @@port, key_file: @@sshd.client_key_path, ignore_known_hosts: true)
     end
 
@@ -54,12 +65,13 @@ class TestExpectSSH < Test::Unit::TestCase
   context :expect do
 
     setup do
+      omit_unless_osx
       @ssh = Expect::SSH.new(@@hostname, @@username, port: @@port, key_file: @@sshd.client_key_path, ignore_known_hosts: true)
       @ssh.start
     end
 
     teardown do
-      @ssh.stop
+      @ssh.stop unless @@omit
     end
 
     should "be able to send a few commands" do

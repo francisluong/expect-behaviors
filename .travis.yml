@@ -7,10 +7,8 @@ install:
  - bundle install
 script: 
 - openssh --version
-- uname -r
 - uname -s
-- uname -m
-- uname -o
+- host `hostname`
 - rake test
 addons:
   code_climate:
