@@ -6,6 +6,8 @@ rvm:
 install:
  - bundle install
 script: 
+- openssl -v
+- uname -r
 - rake test
 addons:
   code_climate:
