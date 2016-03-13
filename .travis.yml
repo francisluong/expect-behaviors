@@ -8,6 +8,9 @@ install:
 script: 
 - openssl -v
 - uname -r
+- uname -s
+- uname -m
+- uname -o
 - rake test
 addons:
   code_climate:
