@@ -128,7 +128,8 @@ class SSHD
   end
 
   def start_ssh_server
-    %x(#{@sshd_filepath} -4 -f #{SSHD_CONFIG_PATH} -E #{SSHD_LOG_PATH})
+    %x(#{@sshd_filepath} -4 -f #{SSHD_CONFIG_PATH})
+    #  -E #{SSHD_LOG_PATH}
     $stdout.puts("[SSHD] [#{__method__}]: Starting on [port=#{@port}]")
     sleep(0.5)
     $stdout.puts("[SSHD] [#{__method__}]: Started on [port=#{@port}] [pid=#{pid}]")

@@ -6,6 +6,7 @@ rvm:
 install:
  - bundle install
 script: 
+- uname -s
 - rake test
 addons:
   code_climate:
