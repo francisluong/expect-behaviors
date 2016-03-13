@@ -1,13 +1,20 @@
----
 language: ruby
 rvm:
- - 2.2.0
- - 2.0.0
+- 2.2.0
+- 2.0.0
 install:
- - bundle install
-script: 
+- bundle install
+script:
 - uname -s
 - rake test
 addons:
   code_climate:
     repo_token: da682865771c5c7d9c6f59c442013c80989a6f19a25a960cecf46aca0f8d0f0d
+deploy:
+  provider: rubygems
+  api_key:
+    secure: YZdbnjpyIZXeoQVizdAWU1MI5zLKsDmHjIMFuAa/sKptsZxqBA6amFGF7uUdmvHvRXlCxN/b3WliXuUJhvsRdzMU28a2/GEfjiCuEfXJm5vmoGH122UxgTBVYw8j9FsxteD09xTZE0eg+XP08CAfBKcgbbAfuhdfVPtW+pvnBx8=
+  gem: expect-behaviors
+  on:
+    tags: true
+    repo: francisluong/expect-behaviors
