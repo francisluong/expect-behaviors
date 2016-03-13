@@ -11,9 +11,9 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Francis Luong (Franco)"]
-  s.date = "2015-04-09"
-  s.description = "TODO: longer description of your gem"
-  s.email = "franco@definefunk.com"
+  s.date = "2016-03-13"
+  s.description = "Ruby Mixin to add Expect Behaviors to SSH/Serial/Telnet controllers"
+  s.email = "me@francisluong.com"
   s.extra_rdoc_files = [
     "LICENSE",
     "README.md"
@@ -28,25 +28,36 @@ Gem::Specification.new do |s|
     "README.md",
     "Rakefile",
     "VERSION",
+    "examples/example_ssh_localhost.rb",
     "expect-behaviors.gemspec",
     "lib/expect/behavior.rb",
     "lib/expect/match.rb",
+    "lib/expect/ssh.rb",
     "lib/expect/timeout_error.rb",
+    "tasks/doc.rake",
+    "tasks/jeweler.rake",
+    "tasks/test.rake",
+    "test/acceptance/sshd/erb/ssh_config.erb",
+    "test/acceptance/sshd/erb/sshd_config.erb",
+    "test/acceptance/test_expect_behaviors_slow_tests.rb",
+    "test/acceptance/test_expect_ssh.rb",
     "test/class_including_expect_behavior.rb",
     "test/helper.rb",
-    "test/test_expect_behaviors.rb",
-    "test/test_expect_match.rb",
-    "test/test_includer_class.rb"
+    "test/sshd.rb",
+    "test/unit/expect/test_expect_behaviors.rb",
+    "test/unit/expect/test_expect_match.rb",
+    "test/unit/expect/test_includer_class.rb"
   ]
   s.homepage = "http://github.com/francisluong/expect-behaviors"
   s.licenses = ["MIT"]
   s.rubygems_version = "2.4.6"
-  s.summary = "TODO: one-line summary of your gem"
+  s.summary = "Ruby Mixin to add Expect Behaviors"
 
   if s.respond_to? :specification_version then
     s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<net-ssh>, [">= 0"])
       s.add_development_dependency(%q<codeclimate-test-reporter>, [">= 0"])
       s.add_development_dependency(%q<mocha>, ["~> 1.1.0"])
       s.add_development_dependency(%q<pry>, ["~> 0.10.1"])
@@ -57,6 +68,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, ["~> 2.0.0"])
       s.add_development_dependency(%q<test-unit>, ["~> 2.5.5"])
     else
+      s.add_dependency(%q<net-ssh>, [">= 0"])
       s.add_dependency(%q<codeclimate-test-reporter>, [">= 0"])
       s.add_dependency(%q<mocha>, ["~> 1.1.0"])
       s.add_dependency(%q<pry>, ["~> 0.10.1"])
@@ -68,6 +80,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<test-unit>, ["~> 2.5.5"])
     end
   else
+    s.add_dependency(%q<net-ssh>, [">= 0"])
     s.add_dependency(%q<codeclimate-test-reporter>, [">= 0"])
     s.add_dependency(%q<mocha>, ["~> 1.1.0"])
     s.add_dependency(%q<pry>, ["~> 0.10.1"])
