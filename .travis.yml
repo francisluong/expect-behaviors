@@ -13,7 +13,7 @@ addons:
 deploy:
   provider: rubygems
   api_key:
-    secure: YZdbnjpyIZXeoQVizdAWU1MI5zLKsDmHjIMFuAa/sKptsZxqBA6amFGF7uUdmvHvRXlCxN/b3WliXuUJhvsRdzMU28a2/GEfjiCuEfXJm5vmoGH122UxgTBVYw8j9FsxteD09xTZE0eg+XP08CAfBKcgbbAfuhdfVPtW+pvnBx8=
+    secure: VThByKVYaSCYmtUvVDYAYRHOepTo0Hv0f0STBeQNSVixt3Km2TfwSllawmbF+cRU2jHfM2cx4oRJwNCySc+sltTvwb7hRgMQ61Fo0d4m4+GPAhaUrcFk3me/XF2aUFhAzvFwor7yiZtPaRr90knr/idbLF7Pyq0C7KM2Iy5xdXI=
   gem: expect-behaviors
   on:
     tags: true
