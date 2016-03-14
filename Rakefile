@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'bundler'
 require 'rake'
+require 'rake/clean'
 
 begin
   Bundler.setup(:default, :development)
@@ -15,3 +16,5 @@ end
 task :default => :test
 
 Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |raketask| load raketask }
+
+CLEAN.include("*.gem")

@@ -88,12 +88,12 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.0)
-  codeclimate-test-reporter
-  jeweler (~> 2.0.0)
-  mocha (~> 1.1.0)
-  net-ssh
+  codeclimate-test-reporter (~> 0)
+  jeweler (~> 2.0, >= 2.0.0)
+  mocha (~> 1.1, >= 1.1.0)
+  net-ssh (~> 2.9, >= 2.9.2)
   pry (~> 0.10.1)
   rdoc (~> 3.12)
-  shoulda (~> 3.5.0)
-  shoulda-context (~> 1.2.1)
-  test-unit (~> 2.5.5)
+  shoulda (~> 3.5, >= 3.5.0)
+  shoulda-context (~> 1.2, >= 1.2.1)
+  test-unit (~> 2.5, >= 2.5.5)

@@ -51,3 +51,5 @@ pkg
 .idea
 test/tmp
 test/tmp/sshd
+
+*.gem
