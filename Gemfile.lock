@@ -82,6 +82,7 @@ GEM
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -97,3 +98,4 @@ DEPENDENCIES
   shoulda (~> 3.5, >= 3.5.0)
   shoulda-context (~> 1.2, >= 1.2.1)
   test-unit (~> 2.5, >= 2.5.5)
+  yard (~> 0.8.7, >= 0.8.7.6)
