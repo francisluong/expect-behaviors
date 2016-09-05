@@ -6,12 +6,12 @@
 
 Gem::Specification.new do |s|
   s.name = "expect-behaviors"
-  s.version = "0.1.3"
+  s.version = IO.read('VERSION')
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Francis Luong (Franco)"]
-  s.date = "2016-03-14"
+  s.date = File.mtime('VERSION')
   s.description = "Ruby Mixin to add Expect Behaviors to SSH/Serial/Telnet controllers"
   s.email = "me@francisluong.com"
   s.extra_rdoc_files = [
